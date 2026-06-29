@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IronForge Gym</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --negro:    #0D0D0D;
+      --carbon:   #1A1A1A;
+      --acero:    #2C2C2C;
+      --naranja:  #E85D04;
+      --naranja2: #F48C06;
+      --blanco:   #F5F5F5;
+      --gris:     #9A9A9A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--negro);
+      color: var(--blanco);
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2.5rem;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--acero);
+    }
+
+    .nav-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: var(--blanco);
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--naranja); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--gris);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--naranja); }
+
+    /* HERO */
+    #inicio {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 2.5rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(232,93,4,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(244,140,6,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Líneas decorativas de fondo */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 50%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 60px,
+        rgba(232,93,4,0.04) 60px,
+        rgba(232,93,4,0.04) 61px
+      );
+    }
+
+    .hero-eyebrow {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--naranja);
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-titulo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      font-weight: 900;
+      line-height: 0.95;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      max-width: 700px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-titulo em {
+      font-style: normal;
+      color: var(--naranja);
+      -webkit-text-stroke: 0px;
+    }
+
+    .hero-sub {
+      margin-top: 1.8rem;
+      font-size: 1.05rem;
+      color: var(--gris);
+      max-width: 440px;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-cta {
+      margin-top: 2.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-primario {
+      background: var(--naranja);
+      color: var(--negro);
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primario:hover {
+      background: var(--naranja2);
+      transform: translateY(-2px);
+    }
+
+    .btn-secundario {
+      color: var(--blanco);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      border-bottom: 1px solid var(--gris);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-secundario:hover {
+      color: var(--naranja);
+      border-color: var(--naranja);
+    }
+
+    /* STATS */
+    .stats-bar {
+      background: var(--carbon);
+      border-top: 1px solid var(--acero);
+      border-bottom: 1px solid var(--acero);
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      padding: 2rem 3.5rem;
+      text-align: center;
+      border-right: 1px solid var(--acero);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--naranja);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--gris);
+      margin-top: 0.3rem;
+    }
+
+    /* SECCIONES */
+    section {
+      padding: 5rem 2.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--naranja);
+      margin-bottom: 0.8rem;
+    }
+
+    .section-titulo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+    }
+
+    /* SERVICIOS */
+    #servicios { background: var(--negro); }
+
+    .servicios-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5px;
+      margin-top: 3rem;
+      background: var(--acero);
+    }
+
+    .servicio-card {
+      background: var(--carbon);
+      padding: 2.5rem 2rem;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .servicio-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0;
+      height: 3px;
+      background: var(--naranja);
+      transition: width 0.3s;
+    }
+
+    .servicio-card:hover { background: var(--acero); }
+    .servicio-card:hover::before { width: 100%; }
+
+    .servicio-icono {
+      font-size: 2rem;
+      margin-bottom: 1.2rem;
+      display: block;
+    }
+
+    .servicio-nombre {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.8rem;
+    }
+
+    .servicio-desc {
+      font-size: 0.9rem;
+      color: var(--gris);
+      line-height: 1.65;
+    }
+
+    /* PLANES */
+    #planes-section {
+      background: var(--carbon);
+      max-width: 100%;
+      padding: 5rem 2.5rem;
+    }
+
+    #planes-section > div {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .planes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .plan-card {
+      background: var(--negro);
+      border: 1px solid var(--acero);
+      padding: 2.5rem 2rem;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+
+    .plan-card.destacado {
+      border-color: var(--naranja);
+    }
+
+    .plan-badge {
+      position: absolute;
+      top: -1px; right: 2rem;
+      background: var(--naranja);
+      color: var(--negro);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+    }
+
+    .plan-nombre {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--gris);
+      margin-bottom: 0.8rem;
+    }
+
+    .plan-precio {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--blanco);
+    }
+
+    .plan-precio span {
+      font-size: 1.2rem;
+      color: var(--gris);
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+    }
+
+    .plan-precio em {
+      font-size: 1.5rem;
+      font-style: normal;
+      vertical-align: super;
+    }
+
+    .plan-divider {
+      height: 1px;
+      background: var(--acero);
+      margin: 1.5rem 0;
+    }
+
+    .plan-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-bottom: 2rem;
+    }
+
+    .plan-features li {
+      font-size: 0.88rem;
+      color: var(--gris);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .plan-features li::before {
+      content: '✓';
+      color: var(--naranja);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* CONTACTO */
+    #contacto {
+      padding: 5rem 2.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .contacto-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-top: 3rem;
+    }
+
+    .campo {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .campo.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gris);
+    }
+
+    input, textarea, select {
+      background: var(--carbon);
+      border: 1px solid var(--acero);
+      color: var(--blanco);
+      padding: 0.85rem 1rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--naranja);
+    }
+
+    textarea { resize: vertical; min-height: 120px; }
+
+    select option { background: var(--carbon); }
+
+    /* FOOTER */
+    footer {
+      background: var(--carbon);
+      border-top: 1px solid var(--acero);
+      text-align: center;
+      padding: 2rem;
+      color: var(--gris);
+      font-size: 0.85rem;
+    }
+
+    footer strong { color: var(--naranja); }
+
+    /* RESPONSIVE */
+    @media (max-width: 680px) {
+      nav { padding: 1rem 1.2rem; }
+      .nav-links { gap: 1.2rem; }
+      .stat { padding: 1.5rem 1.8rem; }
+      .contacto-grid { grid-template-columns: 1fr; }
+      .campo.full { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVEGACIÓN -->
+  <nav>
+    <a href="#inicio" class="nav-logo">IRON<span>FORGE</span></a>
+    <ul class="nav-links">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#planes-section">Planes</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="inicio">
+    <div class="hero-bg"></div>
+    <p class="hero-eyebrow">San José, Costa Rica</p>
+    <h1 class="hero-titulo">Forjá tu<br/><em>mejor</em><br/>versión.</h1>
+    <p class="hero-sub">Entrenamiento de alto rendimiento, coaches certificados y equipos de primer nivel. No hay excusas, solo resultados.</p>
+    <div class="hero-cta">
+      <a href="#planes-section" class="btn-primario">Ver planes</a>
+      <a href="#contacto" class="btn-secundario">Contactar</a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-num">800+</div>
+      <div class="stat-label">Miembros activos</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">12</div>
+      <div class="stat-label">Coaches certificados</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">6am</div>
+      <div class="stat-label">Apertura diaria</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">8</div>
+      <div class="stat-label">Años de experiencia</div>
+    </div>
+  </div>
+
+  <!-- SERVICIOS -->
+  <div id="servicios" style="background: var(--negro); padding: 5rem 2.5rem;">
+    <div style="max-width:1100px; margin:0 auto;">
+      <p class="section-eyebrow">Lo que ofrecemos</p>
+      <h2 class="section-titulo">Nuestros servicios</h2>
+      <div class="servicios-grid">
+        <div class="servicio-card">
+          <span class="servicio-icono">🏋️</span>
+          <div class="servicio-nombre">Musculación</div>
+          <p class="servicio-desc">Zona de pesos libres y máquinas de última generación. Entrena a tu ritmo con guía profesional disponible.</p>
+        </div>
+        <div class="servicio-card">
+          <span class="servicio-icono">🥊</span>
+          <div class="servicio-nombre">Artes Marciales</div>
+          <p class="servicio-desc">Clases de MMA, boxeo y jiu-jitsu para todos los niveles. Disciplina y técnica en un ambiente seguro.</p>
+        </div>
+        <div class="servicio-card">
+          <span class="servicio-icono">🔥</span>
+          <div class="servicio-nombre">Cardio & HIIT</div>
+          <p class="servicio-desc">Sesiones de alta intensidad diseñadas para quemar grasa y mejorar tu resistencia cardiovascular.</p>
+        </div>
+        <div class="servicio-card">
+          <span class="servicio-icono">🧘</span>
+          <div class="servicio-nombre">Yoga & Movilidad</div>
+          <p class="servicio-desc">Recuperación activa, flexibilidad y equilibrio mental. El complemento ideal para tu rutina de entrenamiento.</p>
+        </div>
+        <div class="servicio-card">
+          <span class="servicio-icono">🥗</span>
+          <div class="servicio-nombre">Nutrición</div>
+          <p class="servicio-desc">Asesoría nutricional personalizada con nutricionistas certificados para maximizar tus resultados.</p>
+        </div>
+        <div class="servicio-card">
+          <span class="servicio-icono">👤</span>
+          <div class="servicio-nombre">Entrenamiento Personal</div>
+          <p class="servicio-desc">Planes individualizados con un coach dedicado exclusivamente a tus metas y tiempos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLANES -->
+  <div id="planes-section" style="background: var(--carbon); padding: 5rem 2.5rem;">
+    <div style="max-width:1100px; margin:0 auto;">
+      <p class="section-eyebrow">Membresías</p>
+      <h2 class="section-titulo">Elegí tu plan</h2>
+      <div class="planes-grid">
+
+        <div class="plan-card">
+          <div class="plan-nombre">Básico</div>
+          <div class="plan-precio"><em>₡</em>25,000<span>/mes</span></div>
+          <div class="plan-divider"></div>
+          <ul class="plan-features">
+            <li>Acceso zona de pesas</li>
+            <li>Zona de cardio</li>
+            <li>Vestuarios y duchas</li>
+            <li>Horario 6am – 10pm</li>
+          </ul>
+          <a href="#contacto" class="btn-primario" style="display:block; text-align:center;">Empezar</a>
+        </div>
+
+        <div class="plan-card destacado">
+          <div class="plan-badge">Más popular</div>
+          <div class="plan-nombre">Pro</div>
+          <div class="plan-precio"><em>₡</em>42,000<span>/mes</span></div>
+          <div class="plan-divider"></div>
+          <ul class="plan-features">
+            <li>Todo lo del plan Básico</li>
+            <li>Clases grupales ilimitadas</li>
+            <li>1 sesión personal al mes</li>
+            <li>Acceso app de seguimiento</li>
+            <li>Descuento en nutrición</li>
+          </ul>
+          <a href="#contacto" class="btn-primario" style="display:block; text-align:center;">Empezar</a>
+        </div>
+
+        <div class="plan-card">
+          <div class="plan-nombre">Elite</div>
+          <div class="plan-precio"><em>₡</em>68,000<span>/mes</span></div>
+          <div class="plan-divider"></div>
+          <ul class="plan-features">
+            <li>Todo lo del plan Pro</li>
+            <li>4 sesiones personales al mes</li>
+            <li>Plan nutricional incluido</li>
+            <li>Acceso prioritario y sin filas</li>
+            <li>Análisis de composición corporal</li>
+          </ul>
+          <a href="#contacto" class="btn-primario" style="display:block; text-align:center;">Empezar</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACTO -->
+  <section id="contacto">
+    <p class="section-eyebrow">Hablemos</p>
+    <h2 class="section-titulo">Contacto</h2>
+    <p style="color: var(--gris); margin-bottom: 0.5rem;">¿Preguntas sobre planes o servicios? Escribinos y te respondemos a la brevedad.</p>
+    <div class="contacto-grid">
+      <div class="campo">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" placeholder="Tu nombre"/>
+      </div>
+      <div class="campo">
+        <label for="telefono">Teléfono</label>
+        <input type="tel" id="telefono" placeholder="8888-0000"/>
+      </div>
+      <div class="campo">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" placeholder="tucorreo@email.com"/>
+      </div>
+      <div class="campo">
+        <label for="plan">Plan de interés</label>
+        <select id="plan">
+          <option value="">Seleccionar...</option>
+          <option>Básico</option>
+          <option>Pro</option>
+          <option>Elite</option>
+          <option>Solo quiero información</option>
+        </select>
+      </div>
+      <div class="campo full">
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" placeholder="¿En qué te podemos ayudar?"></textarea>
+      </div>
+      <div class="campo full">
+        <a href="#" class="btn-primario" style="text-align:center;">Enviar mensaje</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 <strong>IronForge Gym</strong> — San José, Costa Rica. Todos los derechos reservados.</p>
+    <p style="margin-top:0.4rem; font-size:0.78rem;">Sitio desarrollado por <strong>Jorge Fernández</strong></p>
+  </footer>
+
+</body>
+</html>
